@@ -16,7 +16,19 @@ function setCartProducts(i) {
 }
 
 function addCartProducts(produtoComprado) {
-  getCartProducts().push(getProducts()[produtoComprado - 1]);
+  const produto = getProducts()[produtoComprado];
+  const produtoEscolhido = getCartProducts().find((p) => p.id === produto.id);
+  if (produtoEscolhido) {
+    produtoEscolhido.quantidade += 1;
+  } else {
+    let produtoCarrinho = {
+      nome: produto.nome,
+      valor: produto.valor,
+      id: produto.id,
+      quantidade: 1
+    };
+    getCartProducts().push(produtoCarrinho);
+  }
 }
 
 function createProduct(nomeP, ValorP) {
@@ -39,7 +51,7 @@ function removeCartProduct(index) {
 
 function totalValueCartProducts() {
   console.log(
-    `Valor Total: ${getCartProducts().reduce((acc, p) => acc + p.valor, 0)}`,
+    `Valor Total: ${getCartProducts().reduce((acc, p) => acc + p.valor * p.quantidade, 0)}`,
   );
 }
 
@@ -49,10 +61,9 @@ function showCartProducts() {
     return false;
   }
   getCartProducts().forEach((p, i) => {
-    console.log(`${i + 1}.Nome: ${p.nome}\n Valor: R$${p.valor}`);
-
-});
-return true;
+    console.log(`${i + 1}.Nome: ${p.nome}\n Valor: R$${p.valor}\n Quantidade: ${p.quantidade}`);
+  });
+  return true;
 }
 
 function showProducts() {
@@ -65,16 +76,21 @@ let product1 = {
   nome: "Notebook",
   valor: 4800,
   id: 1,
+  quantidade: 1,
 };
+
 let product2 = {
   nome: "Iphone 13",
   valor: 4000,
   id: 2,
+  quantidade: 1,
 };
+
 let product3 = {
   nome: "Computador",
   valor: 6000,
   id: 3,
+  quantidade: 1,
 };
 
 let products = [product1, product2, product3];
