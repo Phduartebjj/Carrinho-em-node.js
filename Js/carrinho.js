@@ -1,18 +1,21 @@
 import promptSync from "prompt-sync";
 import {
   getProducts,
-  getCartProducts,
   createProduct,
   saveProduct,
   removeCartProduct,
   addCartProducts,
   showCartProducts,
   showProducts,
-  setCartProducts,
-  totalValueCartProducts
+  totalValueCartProducts,
+  cleanCart,
 } from "./products.js";
+import { loadStorage } from "./storage.js";
+import { thereIsInput, numIsValid } from "./validation.js";
 
 const prompt = promptSync();
+loadStorage();
+let input;
 let rodando = true;
 let produtoComprado = 0;
 let nomeProduto;
@@ -25,7 +28,7 @@ while (rodando) {
   console.log("===== 2. Ver Carrinho");
   console.log("===== 3. Cadastrar Produto");
   console.log("===== 4. Remover Produto");
-  console.log("===== 5. Reiniciar");
+  console.log("===== 5. Limpar Carrinho");
   console.log("===== 6. Sair");
   console.log("=========================");
 
@@ -42,10 +45,10 @@ while (rodando) {
       produtoComprado = Number(
         prompt("\nDigite o número do produto que Deseja comprar "),
       );
-      if(produtoComprado >= 1 && produtoComprado <= getProducts().length){
+      if (produtoComprado >= 1 && produtoComprado <= getProducts().length) {
         addCartProducts(produtoComprado);
       } else {
-        console.log("Número do produto inválido")
+        console.log("Número do produto inválido");
       }
 
       escolha = Number(prompt("\nDeseja continuar? 1-Sim 2-Não "));
@@ -56,7 +59,7 @@ while (rodando) {
     //VER CARRINHO
     case 2:
       showCartProducts();
-      totalValueCartProducts()
+      totalValueCartProducts();
       escolha = Number(prompt("\nDeseja continuar? 1-Sim 2-Não "));
       if (escolha != 1) {
         rodando = false;
@@ -65,29 +68,65 @@ while (rodando) {
     // CADASTRAR PRODUTOS
     case 3:
       nomeProduto = prompt("Digite o nome do produto: ");
-      valorProduto = Number(prompt("Digite o valor do produto: "));
+      input = prompt("Digite o valor do produto: ");
+
+      if (!thereIsInput(input)) {
+        console.log("Entrada inválida");
+        break;
+      }
+
+      valorProduto = Number(input);
+
+      if (!numIsValid(valorProduto)) {
+        console.log("Número inválido");
+        break;
+      }
 
       saveProduct(createProduct(nomeProduto, valorProduto));
       console.log("\nAdicionando produto...");
       console.log("Produto Adiconado com sucesso!");
+
       break;
 
     // DELETAR PRODUTOS
     case 4:
-      if(showCartProducts()){
-        produtoEscolhido = Number(
-          prompt("Digite o número do produto que deseja deletar: "),
-        );
+      if (showCartProducts()) {
+        input = prompt("Digite o número do produto que deseja deletar: ");
+        if (!thereIsInput(input)) {
+          console.log("Entrada inválida");
+          break;
+        }
+
+        produtoEscolhido = Number(input);
+
+        if (!numIsValid(produtoEscolhido)) {
+          console.log("Número inválido");
+          break;
+        }
+
         removeCartProduct(produtoEscolhido);
       } else {
-        console.log("Não é verdadeiro")
+        console.log("Não é verdadeiro");
       }
 
       break;
     // REINICIAR PROGRAMA
     case 5:
-      console.log("\nReiniciando...");
-      console.log("");
+      showCartProducts();
+      input = prompt("Deseja mesmo Limpar o carrinho? 1-Sim 2-Não: ");
+      if (!thereIsInput(input)) {
+        console.log("Entrada inválida");
+        break;
+      }
+
+      let escolhaLimpar = Number(input);
+
+      if (escolhaLimpar !== 1 && escolhaLimpar !== 2) {
+        console.log("Número inválido");
+        break;
+      }
+      if(escolhaLimpar === 1) cleanCart()
+      
       break;
     // SAIR PROGRAMA
     case 6:

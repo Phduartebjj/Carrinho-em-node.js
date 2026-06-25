@@ -1,6 +1,8 @@
-import { saveCartInStorage, saveProductsInStorage } from "./storage";
+import { saveCartInStorage, saveProductsInStorage } from "./storage.js";
+import { randomUUID } from "node:crypto";
 
 let cartProducts = [];
+let products = [];
 
 function getProducts() {
   return products;
@@ -19,7 +21,17 @@ function setCartProducts(i) {
 
 function addCartProducts(produtoComprado) {
   //Peguei o produto comprado da lista de produtos
+  if (typeof produtoComprado !== "number" || produtoComprado <= 0) {
+    console.log("Entrada inválida");
+    return;
+  }
+
   const produto = getProducts()[produtoComprado - 1];
+
+  if (!produto) {
+    console.log("Produto inválido");
+    return;
+  }
   //Achei ele no carrinho
   const produtoEscolhido = getCartProducts().find((p) => p.id === produto.id);
   //Vi se ele existe
@@ -36,22 +48,22 @@ function addCartProducts(produtoComprado) {
     };
     getCartProducts().push(produtoCarrinho);
   }
-  saveCartInStorage()
+  saveCartInStorage();
 }
 
 function createProduct(nomeP, ValorP) {
   let product = {
     nome: nomeP,
-    valor: ValorP,
-    id: crypto.randomUUID(),
+    valor: Number(ValorP),
+    id: randomUUID(),
   };
 
   return product;
 }
 
 function saveProduct(product) {
-  products.push(product);
-  saveProductsInStorage()
+  getProducts().push(product);
+  saveProductsInStorage();
 }
 
 function removeCartProduct(index) {
@@ -67,15 +79,23 @@ function removeCartProduct(index) {
     produtoSelecionado.quantidade--;
   } else {
     //Se for 1 ou abaixo, ele remove do array quando diminui
-    setCartProducts(getCartProducts().filter((p, i) => i != index - 1));
+
+    setCartProducts(
+      getCartProducts().filter((p) => p.id !== produtoSelecionado.id),
+    );
     console.log("Produto Removido");
   }
-  saveCartInStorage()
+  saveCartInStorage();
 }
 
 function totalValueCartProducts() {
+  if (getCartProducts().length === 0) {
+    console.log("Carrinho está vazio")
+    return
+  }
+
   console.log(
-    `Valor Total: ${getCartProducts().reduce((acc, p) => acc + p.valor * p.quantidade, 0)}`,
+    `Valor Total: R$${getCartProducts().reduce((acc, p) => acc + p.valor * p.quantidade, 0)}`,
   );
 }
 
@@ -98,25 +118,10 @@ function showProducts() {
   });
 }
 
-let product1 = {
-  nome: "Notebook",
-  valor: 4800,
-  id: 1,
-};
-
-let product2 = {
-  nome: "Iphone 13",
-  valor: 4000,
-  id: 2,
-};
-
-let product3 = {
-  nome: "Computador",
-  valor: 6000,
-  id: 3,
-};
-
-let products = [product1, product2, product3];
+function cleanCart() {
+  setCartProducts([]);
+  saveCartInStorage();
+}
 
 export {
   getProducts,
@@ -130,4 +135,5 @@ export {
   setCartProducts,
   setProducts,
   totalValueCartProducts,
+  cleanCart,
 };
