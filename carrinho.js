@@ -20,7 +20,7 @@ let valorProduto = 0;
 let produtoEscolhido = 0;
 
 while (rodando) {
-  console.log("\n ======== LOJINHA ========");
+  console.log("\n======== LOJINHA ========");
   console.log("===== 1. Ver Produtos");
   console.log("===== 2. Ver Carrinho");
   console.log("===== 3. Cadastrar Produto");
@@ -78,7 +78,7 @@ while (rodando) {
         produtoEscolhido = Number(
           prompt("Digite o número do produto que deseja deletar: "),
         );
-        removeCartProduct(produtoEscolhido - 1);
+        removeCartProduct(produtoEscolhido);
       } else {
         console.log("Não é verdadeiro")
       }

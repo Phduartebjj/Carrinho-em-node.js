@@ -1,0 +1,21 @@
+[
+
+{
+  "nome": "Notebook",
+  "valor": 4800,
+  "id": 1
+},
+
+{
+  "nome": "Iphone 13",
+  "valor": 4000,
+  "id": 2
+},
+
+{
+  "nome": "Computador",
+  "valor": 6000,
+  "id": 3
+}
+
+]

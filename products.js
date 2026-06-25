@@ -1,3 +1,5 @@
+import { saveCartInStorage, saveProductsInStorage } from "./storage";
+
 let cartProducts = [];
 
 function getProducts() {
@@ -16,19 +18,25 @@ function setCartProducts(i) {
 }
 
 function addCartProducts(produtoComprado) {
-  const produto = getProducts()[produtoComprado];
+  //Peguei o produto comprado da lista de produtos
+  const produto = getProducts()[produtoComprado - 1];
+  //Achei ele no carrinho
   const produtoEscolhido = getCartProducts().find((p) => p.id === produto.id);
+  //Vi se ele existe
   if (produtoEscolhido) {
-    produtoEscolhido.quantidade += 1;
+    //Como ele existe adicionei mais uma quantidade
+    produtoEscolhido.quantidade++;
   } else {
+    //Caso não exista, eu crio um objeto baseado nele. Com a quantidade, para não acabar alterando a lista de produtos com o push
     let produtoCarrinho = {
       nome: produto.nome,
       valor: produto.valor,
       id: produto.id,
-      quantidade: 1
+      quantidade: 1,
     };
     getCartProducts().push(produtoCarrinho);
   }
+  saveCartInStorage()
 }
 
 function createProduct(nomeP, ValorP) {
@@ -43,10 +51,26 @@ function createProduct(nomeP, ValorP) {
 
 function saveProduct(product) {
   products.push(product);
+  saveProductsInStorage()
 }
 
 function removeCartProduct(index) {
-  setCartProducts(getCartProducts().filter((p, i) => i != index));
+  //Acha o produto no carrinho
+  const produtoSelecionado = getCartProducts()[index - 1];
+  //Se o índice não for válido cancela a operação
+  if (!produtoSelecionado) {
+    console.log("Produto inválido");
+    return;
+  }
+  //Se a quantidade for maior do que 1 diminui quantidade
+  if (produtoSelecionado.quantidade > 1) {
+    produtoSelecionado.quantidade--;
+  } else {
+    //Se for 1 ou abaixo, ele remove do array quando diminui
+    setCartProducts(getCartProducts().filter((p, i) => i != index - 1));
+    console.log("Produto Removido");
+  }
+  saveCartInStorage()
 }
 
 function totalValueCartProducts() {
@@ -61,7 +85,9 @@ function showCartProducts() {
     return false;
   }
   getCartProducts().forEach((p, i) => {
-    console.log(`${i + 1}.Nome: ${p.nome}\n Valor: R$${p.valor}\n Quantidade: ${p.quantidade}`);
+    console.log(
+      `${i + 1}.Nome: ${p.nome}\n Valor Unitário: R$${p.valor}\n Quantidade: ${p.quantidade}`,
+    );
   });
   return true;
 }
@@ -76,21 +102,18 @@ let product1 = {
   nome: "Notebook",
   valor: 4800,
   id: 1,
-  quantidade: 1,
 };
 
 let product2 = {
   nome: "Iphone 13",
   valor: 4000,
   id: 2,
-  quantidade: 1,
 };
 
 let product3 = {
   nome: "Computador",
   valor: 6000,
   id: 3,
-  quantidade: 1,
 };
 
 let products = [product1, product2, product3];
@@ -105,5 +128,6 @@ export {
   showProducts,
   showCartProducts,
   setCartProducts,
+  setProducts,
   totalValueCartProducts,
 };
