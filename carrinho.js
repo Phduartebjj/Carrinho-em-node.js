@@ -1,110 +1,100 @@
 import promptSync from "prompt-sync";
-
-let rodando = true;
-let continuar;
-let produto1 = {
-  nome: "Brinquedo",
-  valor: 20,
-};
-
-let produto2 = {
-  nome: "Celular",
-  valor: 1900,
-};
-
-let produto3 = {
-  nome: "Notebook",
-  valor: 4800,
-};
-let produtos = [produto1, produto2, produto3];
-let Carrinho = [];
+import {
+  getProducts,
+  getCartProducts,
+  createProduct,
+  saveProduct,
+  removeCartProduct,
+  addCartProducts,
+  showCartProducts,
+  showProducts,
+  setCartProducts,
+  totalValueCartProducts
+} from "./products.js";
 
 const prompt = promptSync();
-let escolha;
-
-function continuarPrograma(e) {
-  if (e != 1) {
-    console.log("Fim do programa");
-    return false;
-  } else {
-    return true;
-  }
-}
-
-function estadoAdicionado(escolha) {
-  console.log("===========================================================");
-  if (escolha <= produtos.length) {
-    Carrinho.push(produtos[escolha]);
-    console.log("item adicionado com sucesso");
-  } else {
-    console.log("item adicionado não existe");
-  }
-}
-
-function espaco() {
-  console.log("");
-  console.log("===========================================================");
-  console.log("");
-}
+let rodando = true;
+let produtoComprado = 0;
+let nomeProduto;
+let valorProduto = 0;
+let produtoEscolhido = 0;
 
 while (rodando) {
-  console.log("============== Bem-vindo ao Carrinho de compras ==============");
-  console.log("           As seguintes opções estão disponíveis              ");
-  console.log("           1.Ver produtos");
-  console.log("           2.Ver carrinho");
-  console.log("           3.Reiniciar");
-  console.log("           4.Sair");
-  console.log("===========================================================");
+  console.log("\n ======== LOJINHA ========");
+  console.log("===== 1. Ver Produtos");
+  console.log("===== 2. Ver Carrinho");
+  console.log("===== 3. Cadastrar Produto");
+  console.log("===== 4. Remover Produto");
+  console.log("===== 5. Reiniciar");
+  console.log("===== 6. Sair");
+  console.log("=========================");
 
-  escolha = Number(prompt("Qual você Escolhe? "));
+  console.log("");
+  let escolha = Number(prompt("Digite o número da opção que deseja escolher "));
 
-  console.log("===========================================================");
   switch (escolha) {
+    //VER PRODUTOS
     case 1:
-      produtos.forEach((p, i) => {
-        console.log(`${i}. ${p.nome} R$${p.valor}`);
-      });
+      console.log("\n===== Produtos Disponíveis: ");
+      showProducts();
+      console.log("=========================");
 
-      escolha = Number(prompt("Qual item você quer adicionar ao carrinho? "));
-      estadoAdicionado(escolha);
-      espaco();
-      escolha = Number(prompt("Deseja continuar? "));
-      continuar = continuarPrograma(escolha);
-      if (continuar) {
+      produtoComprado = Number(
+        prompt("\nDigite o número do produto que Deseja comprar "),
+      );
+      if(produtoComprado >= 1 && produtoComprado <= getProducts().length){
+        addCartProducts(produtoComprado);
       } else {
+        console.log("Número do produto inválido")
+      }
+
+      escolha = Number(prompt("\nDeseja continuar? 1-Sim 2-Não "));
+      if (escolha != 1) {
         rodando = false;
       }
       break;
-
-    // ================ CARRINHO
+    //VER CARRINHO
     case 2:
-      espaco();
-      console.log("\n============== Carrinho ==============");
-      if (Carrinho.length > 0) {
-        console.log(Carrinho);
-        console.log(
-          "Total Carrinho: ",
-          Carrinho.reduce((acc, p) => acc + p.valor, 0),
-        );
-      } else {
-        console.log("Carrinho vazio");
-      }
-      escolha = Number(prompt("Deseja continuar? "));
-      continuar = continuarPrograma(escolha);
-      if (continuar) {
-      } else {
+      showCartProducts();
+      totalValueCartProducts()
+      escolha = Number(prompt("\nDeseja continuar? 1-Sim 2-Não "));
+      if (escolha != 1) {
         rodando = false;
       }
-      espaco();
       break;
+    // CADASTRAR PRODUTOS
     case 3:
-      espaco();
+      nomeProduto = prompt("Digite o nome do produto: ");
+      valorProduto = Number(prompt("Digite o valor do produto: "));
+
+      saveProduct(createProduct(nomeProduto, valorProduto));
+      console.log("\nAdicionando produto...");
+      console.log("Produto Adiconado com sucesso!");
       break;
+
+    // DELETAR PRODUTOS
     case 4:
+      if(showCartProducts()){
+        produtoEscolhido = Number(
+          prompt("Digite o número do produto que deseja deletar: "),
+        );
+        removeCartProduct(produtoEscolhido - 1);
+      } else {
+        console.log("Não é verdadeiro")
+      }
+
+      break;
+    // REINICIAR PROGRAMA
+    case 5:
+      console.log("\nReiniciando...");
+      console.log("");
+      break;
+    // SAIR PROGRAMA
+    case 6:
       rodando = false;
-      console.log("Fim do programa");
+      console.log("\nFim do Programa");
       break;
     default:
-      console.log("Opção não disponível");
+      console.log("\nOpção inválida");
   }
 }
