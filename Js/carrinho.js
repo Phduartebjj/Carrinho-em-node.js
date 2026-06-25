@@ -10,6 +10,7 @@ import {
   totalValueCartProducts,
   cleanCart,
 } from "./products.js";
+import { checkout } from "./checkout.js";
 import { loadStorage } from "./storage.js";
 import { thereIsInput, numIsValid } from "./validation.js";
 
@@ -45,6 +46,7 @@ while (rodando) {
       produtoComprado = Number(
         prompt("\nDigite o número do produto que Deseja comprar "),
       );
+      //Verifica se o produtoEscolhi está dentro do que é permitdo
       if (produtoComprado >= 1 && produtoComprado <= getProducts().length) {
         addCartProducts(produtoComprado);
       } else {
@@ -58,9 +60,9 @@ while (rodando) {
       break;
     //VER CARRINHO
     case 2:
-      showCartProducts();
-      totalValueCartProducts();
-      escolha = Number(prompt("\nDeseja continuar? 1-Sim 2-Não "));
+      checkout()
+      escolha = Number(prompt("\nDeseja continuar o programa? 1-Sim 2-Não "));
+      //Se escolha for diferente de 1 cancela o programa.
       if (escolha != 1) {
         rodando = false;
       }
@@ -110,10 +112,10 @@ while (rodando) {
       }
 
       break;
-    // REINICIAR PROGRAMA
+    // LIMPAR CARRINHO
     case 5:
       showCartProducts();
-      input = prompt("Deseja mesmo Limpar o carrinho? 1-Sim 2-Não: ");
+      input = prompt("\nDeseja mesmo Limpar o carrinho? 1-Sim 2-Não: ");
       if (!thereIsInput(input)) {
         console.log("Entrada inválida");
         break;
