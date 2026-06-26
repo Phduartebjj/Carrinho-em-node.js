@@ -1,4 +1,5 @@
 import promptSync from "prompt-sync";
+
 import {
   getProducts,
   createProduct,
@@ -9,6 +10,7 @@ import {
   showProducts,
   totalValueCartProducts,
   cleanCart,
+  editProduct
 } from "./products.js";
 import { checkout } from "./checkout.js";
 import { loadStorage } from "./storage.js";
@@ -22,6 +24,7 @@ let produtoComprado = 0;
 let nomeProduto;
 let valorProduto = 0;
 let produtoEscolhido = 0;
+let produtoEditado = 0;
 
 while (rodando) {
   console.log("\n======== LOJINHA ========");
@@ -29,12 +32,13 @@ while (rodando) {
   console.log("===== 2. Ver Carrinho");
   console.log("===== 3. Cadastrar Produto");
   console.log("===== 4. Remover Produto");
-  console.log("===== 5. Limpar Carrinho");
-  console.log("===== 6. Sair");
+  console.log("===== 5. Editar Produto");
+  console.log("===== 6. Limpar Carrinho");
+  console.log("===== 7. Sair");
   console.log("=========================");
 
   console.log("");
-  let escolha = Number(prompt("Digite o número da opção que deseja escolher "));
+  let escolha = Number(prompt("Digite o número da opção que deseja escolher: "));
 
   switch (escolha) {
     //VER PRODUTOS
@@ -112,8 +116,31 @@ while (rodando) {
       }
 
       break;
-    // LIMPAR CARRINHO
-    case 5:
+      //EDITAR PRODUTO
+      case 5:
+      showProducts()
+      produtoEditado = Number(prompt("Digite o número do produto que deseja editar"))
+
+      nomeProduto = prompt("Digite o nome do produto: ");
+      input = prompt("Digite o valor do produto: ");
+
+      if (!thereIsInput(input)) {
+        console.log("Entrada inválida");
+        break;
+      }
+
+      valorProduto = Number(input);
+
+      if (!numIsValid(valorProduto)) {
+        console.log("Número inválido");
+        break;
+      }
+
+      editProduct(produtoEditado,nomeProduto,valorProduto)
+
+        break
+        // LIMPAR CARRINHO
+    case 6:
       showCartProducts();
       input = prompt("\nDeseja mesmo Limpar o carrinho? 1-Sim 2-Não: ");
       if (!thereIsInput(input)) {
@@ -131,7 +158,7 @@ while (rodando) {
       
       break;
     // SAIR PROGRAMA
-    case 6:
+    case 7:
       rodando = false;
       console.log("\nFim do Programa");
       break;

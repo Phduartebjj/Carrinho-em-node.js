@@ -128,6 +128,25 @@ function cleanCart() {
   saveCartInStorage();
 }
 
+function editProduct(index,nomeP,valorP){
+  if(index > getProducts().length || index < 1) {
+    console.log("Número inválido")
+    return
+  }
+  let produtoEditado = getProducts()[index-1]
+  produtoEditado.nome = nomeP
+  produtoEditado.valor = valorP
+ let produtoEditadoCart = getCartProducts().find((p)=> p.id === produtoEditado.id)
+  if(produtoEditadoCart){
+    produtoEditadoCart.nome = nomeP 
+    produtoEditadoCart.valor = valorP
+    saveCartInStorage()
+  }
+
+  saveProductsInStorage()
+  console.log("Produto Editado com sucesso!")
+}
+
 export {
   getProducts,
   getCartProducts,
@@ -141,4 +160,6 @@ export {
   setProducts,
   totalValueCartProducts,
   cleanCart,
+  editProduct
+
 };

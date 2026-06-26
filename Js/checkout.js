@@ -13,14 +13,14 @@ function checkout() {
   }
   totalValueCartProducts();
 
-  const confirm = Number(prompt("Deseja Efetuar a compra? (1-Sim 2-Não): "));
+  const confirm = Number(prompt("Deseja efetuar a compra? (1-Sim 2-Não): "));
   if (confirm !== 1 && confirm !== 2) {
     console.log("Opção inválida");
     return;
   }
 
   if (confirm === 2) {
-    console.log("Boas compras!");
+    console.log("Checkout cancelado");
     return;
   }
   console.log("Compra finalizada com sucesso!");
