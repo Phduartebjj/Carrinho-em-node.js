@@ -67,6 +67,7 @@ function saveProduct(product) {
   getProducts().push(product);
   saveProductsInStorage();
 }
+
 //Remove do carrinho
 function removeCartProduct(index) {
   //Acha o produto no carrinho pelo indíce
@@ -88,6 +89,7 @@ function removeCartProduct(index) {
   }
   saveCartInStorage();
 }
+
 //Mostra o valor total do carrinho
 function totalValueCartProducts() {
   //Verifica se o tamanho do array cartProducts é igual a 0, se for retorna vazio.
@@ -97,7 +99,7 @@ function totalValueCartProducts() {
   }
   //Mostra o valor total no console.log
   console.log(
-    `Valor Total: R$${getCartProducts().reduce((acc, p) => acc + p.valor * p.quantidade, 0)}`,
+    `Valor Total: R$${getCartProducts().reduce((acc, p) => acc + p.valor * p.quantidade, 0)}\n`,
   );
 }
 //Mostra os produtos do array cartProducts
@@ -128,23 +130,49 @@ function cleanCart() {
   saveCartInStorage();
 }
 
-function editProduct(index,nomeP,valorP){
-  if(index > getProducts().length || index < 1) {
-    console.log("Número inválido")
-    return
+function editProduct(index, nomeP, valorP) {
+  if (index > getProducts().length || index < 1) {
+    console.log("Número inválido");
+    return;
   }
-  let produtoEditado = getProducts()[index-1]
-  produtoEditado.nome = nomeP
-  produtoEditado.valor = valorP
- let produtoEditadoCart = getCartProducts().find((p)=> p.id === produtoEditado.id)
-  if(produtoEditadoCart){
-    produtoEditadoCart.nome = nomeP 
-    produtoEditadoCart.valor = valorP
-    saveCartInStorage()
+  let produtoEditado = getProducts()[index - 1];
+  produtoEditado.nome = nomeP;
+  produtoEditado.valor = valorP;
+  let produtoEditadoCart = getCartProducts().find(
+    (p) => p.id === produtoEditado.id,
+  );
+  if (produtoEditadoCart) {
+    produtoEditadoCart.nome = nomeP;
+    produtoEditadoCart.valor = valorP;
+    saveCartInStorage();
   }
 
-  saveProductsInStorage()
-  console.log("Produto Editado com sucesso!")
+  saveProductsInStorage();
+  console.log("Produto Editado com sucesso!");
+}
+
+function removeProduct(index) {
+  //Acha o produto pelo indíce
+  const produtoSelecionado = getProducts()[index - 1];
+  //Se o índice não for válido cancela a operação
+  if (!produtoSelecionado) {
+    console.log("Produto inválido");
+    return;
+  }
+  setProducts(
+    getProducts().filter((p) => p.id !== produtoSelecionado.id),
+  );
+  
+  const produtoCartSelecionado = getCartProducts().find((p) => p.id === produtoSelecionado.id)
+  if(produtoCartSelecionado){
+    setCartProducts(
+      getCartProducts().filter((p) => p.id !== produtoCartSelecionado.id),
+    );
+    saveCartInStorage();
+  }
+
+  console.log("Produto Removido");
+  saveProductsInStorage();
 }
 
 export {
@@ -160,6 +188,6 @@ export {
   setProducts,
   totalValueCartProducts,
   cleanCart,
-  editProduct
-
+  editProduct,
+  removeProduct
 };

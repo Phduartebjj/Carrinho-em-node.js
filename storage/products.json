@@ -1,27 +1,7 @@
 [
   {
     "nome": "Notebook",
-    "valor": 4800,
-    "id": 1
-  },
-  {
-    "nome": "Iphone 13",
     "valor": 4000,
-    "id": 2
-  },
-  {
-    "nome": "Computador",
-    "valor": 6000,
-    "id": 3
-  },
-  {
-    "nome": "l",
-    "valor": 200,
-    "id": "be9be7e0-8d3e-432b-b21e-4a1e412634f7"
-  },
-  {
-    "nome": "Nicolas",
-    "valor": 200,
-    "id": "eb249b52-2783-48f2-9c5f-7d0006997c48"
+    "id": "8dff5ed7-e6df-49b6-b847-81c0ad3764d5"
   }
 ]

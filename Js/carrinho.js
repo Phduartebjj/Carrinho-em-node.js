@@ -10,7 +10,8 @@ import {
   showProducts,
   totalValueCartProducts,
   cleanCart,
-  editProduct
+  editProduct,
+  removeProduct
 } from "./products.js";
 import { checkout } from "./checkout.js";
 import { loadStorage } from "./storage.js";
@@ -27,18 +28,22 @@ let produtoEscolhido = 0;
 let produtoEditado = 0;
 
 while (rodando) {
-  console.log("\n======== LOJINHA ========");
-  console.log("===== 1. Ver Produtos");
-  console.log("===== 2. Ver Carrinho");
-  console.log("===== 3. Cadastrar Produto");
-  console.log("===== 4. Remover Produto");
-  console.log("===== 5. Editar Produto");
-  console.log("===== 6. Limpar Carrinho");
-  console.log("===== 7. Sair");
+  console.log("======== CATÁLOGO ========");
+  console.log("===== 1. Ver Catálogo");
+  console.log("===== 2. Cadastrar Produtos");
+  console.log("===== 3. Editar Produtos");
+  console.log("===== 4. Remover Produtos");
+  console.log("======== CARRINHO ========\n");
+  console.log("===== 5. Ver Carrinho");
+  console.log("===== 6. Remover Produto do Carrinho");
+  console.log("===== 7. Limpar Carrinho");
+  console.log("===== 8. Sair");
   console.log("=========================");
 
   console.log("");
-  let escolha = Number(prompt("Digite o número da opção que deseja escolher: "));
+  let escolha = Number(
+    prompt("Digite o número da opção que deseja escolher: "),
+  );
 
   switch (escolha) {
     //VER PRODUTOS
@@ -62,17 +67,8 @@ while (rodando) {
         rodando = false;
       }
       break;
-    //VER CARRINHO
-    case 2:
-      checkout()
-      escolha = Number(prompt("\nDeseja continuar o programa? 1-Sim 2-Não "));
-      //Se escolha for diferente de 1 cancela o programa.
-      if (escolha != 1) {
-        rodando = false;
-      }
-      break;
     // CADASTRAR PRODUTOS
-    case 3:
+    case 2:
       nomeProduto = prompt("Digite o nome do produto: ");
       input = prompt("Digite o valor do produto: ");
 
@@ -94,8 +90,63 @@ while (rodando) {
 
       break;
 
-    // DELETAR PRODUTOS
+    //EDITAR PRODUTO
+    case 3:
+      showProducts();
+      produtoEditado = Number(
+        prompt("Digite o número do produto que deseja editar"),
+      );
+       if (!numIsValid(produtoEditado)) {
+        console.log("Número inválido");
+        break;
+      }
+      nomeProduto = prompt("Digite o nome do produto: ");
+      input = prompt("Digite o valor do produto: ");
+
+      if (!thereIsInput(input)) {
+        console.log("Entrada inválida");
+        break;
+      }
+
+      valorProduto = Number(input);
+
+      if (!numIsValid(valorProduto)) {
+        console.log("Número inválido");
+        break;
+      }
+      break
+    //REMOVER PRODUTO DO CATÁLOGO
     case 4:
+      showProducts();
+      input = prompt("Digite o número do produto que deseja deletar: ");
+      if (!thereIsInput(input)) {
+        console.log("Entrada inválida");
+        break;
+      }
+      produtoEscolhido = Number(input);
+
+      if (!numIsValid(produtoEscolhido)) {
+        console.log("Número inválido");
+        break;
+      }
+      removeProduct(produtoEscolhido)
+
+      break;
+    //VER CARRINHO
+    case 5:
+      checkout();
+      escolha = Number(prompt("\nDeseja continuar o programa? 1-Sim 2-Não "));
+      //Se escolha for diferente de 1 cancela o programa.
+      if (escolha != 1) {
+        rodando = false;
+      }
+      break;
+
+      editProduct(produtoEditado, nomeProduto, valorProduto);
+
+      break;
+    // DELETAR PRODUTOS
+    case 6:
       if (showCartProducts()) {
         input = prompt("Digite o número do produto que deseja deletar: ");
         if (!thereIsInput(input)) {
@@ -116,31 +167,8 @@ while (rodando) {
       }
 
       break;
-      //EDITAR PRODUTO
-      case 5:
-      showProducts()
-      produtoEditado = Number(prompt("Digite o número do produto que deseja editar"))
-
-      nomeProduto = prompt("Digite o nome do produto: ");
-      input = prompt("Digite o valor do produto: ");
-
-      if (!thereIsInput(input)) {
-        console.log("Entrada inválida");
-        break;
-      }
-
-      valorProduto = Number(input);
-
-      if (!numIsValid(valorProduto)) {
-        console.log("Número inválido");
-        break;
-      }
-
-      editProduct(produtoEditado,nomeProduto,valorProduto)
-
-        break
-        // LIMPAR CARRINHO
-    case 6:
+    // LIMPAR CARRINHO
+    case 7:
       showCartProducts();
       input = prompt("\nDeseja mesmo Limpar o carrinho? 1-Sim 2-Não: ");
       if (!thereIsInput(input)) {
@@ -154,11 +182,11 @@ while (rodando) {
         console.log("Número inválido");
         break;
       }
-      if(escolhaLimpar === 1) cleanCart()
-      
+      if (escolhaLimpar === 1) cleanCart();
+
       break;
     // SAIR PROGRAMA
-    case 7:
+    case 8:
       rodando = false;
       console.log("\nFim do Programa");
       break;
