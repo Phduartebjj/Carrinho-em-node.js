@@ -1,7 +1,22 @@
 [
   {
-    "nome": "Notebook",
-    "valor": 4000,
+    "nome": "Notebook 12000",
+    "valor": 2100,
     "id": "8dff5ed7-e6df-49b6-b847-81c0ad3764d5"
+  },
+  {
+    "nome": "Pedro",
+    "valor": 1200,
+    "id": "fcb9f276-0b73-489c-a374-fe2eea7f76d8"
+  },
+  {
+    "nome": "teste",
+    "valor": 200,
+    "id": "1d837d2d-b5a5-420b-9b2e-6ac24994d524"
+  },
+  {
+    "nome": "teste1",
+    "valor": 2100,
+    "id": "8f3549b6-1793-46c6-9ca7-49529f44a0df"
   }
 ]

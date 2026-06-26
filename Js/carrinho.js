@@ -11,7 +11,8 @@ import {
   totalValueCartProducts,
   cleanCart,
   editProduct,
-  removeProduct
+  removeProduct,
+  searchProduct,
 } from "./products.js";
 import { checkout } from "./checkout.js";
 import { loadStorage } from "./storage.js";
@@ -26,6 +27,8 @@ let nomeProduto;
 let valorProduto = 0;
 let produtoEscolhido = 0;
 let produtoEditado = 0;
+let nomeBuscado;
+let produtoBuscado;
 
 while (rodando) {
   console.log("======== CATÁLOGO ========");
@@ -33,11 +36,12 @@ while (rodando) {
   console.log("===== 2. Cadastrar Produtos");
   console.log("===== 3. Editar Produtos");
   console.log("===== 4. Remover Produtos");
-  console.log("======== CARRINHO ========\n");
-  console.log("===== 5. Ver Carrinho");
-  console.log("===== 6. Remover Produto do Carrinho");
-  console.log("===== 7. Limpar Carrinho");
-  console.log("===== 8. Sair");
+  console.log("===== 5. Buscar Produtos");
+  console.log("======== CARRINHO ========");
+  console.log("===== 6. Ver Carrinho");
+  console.log("===== 7. Remover Produto do Carrinho");
+  console.log("===== 8. Limpar Carrinho");
+  console.log("===== 9. Sair");
   console.log("=========================");
 
   console.log("");
@@ -96,7 +100,7 @@ while (rodando) {
       produtoEditado = Number(
         prompt("Digite o número do produto que deseja editar"),
       );
-       if (!numIsValid(produtoEditado)) {
+      if (!numIsValid(produtoEditado)) {
         console.log("Número inválido");
         break;
       }
@@ -114,7 +118,10 @@ while (rodando) {
         console.log("Número inválido");
         break;
       }
-      break
+
+      editProduct(produtoEditado, nomeProduto, valorProduto);
+
+      break;
     //REMOVER PRODUTO DO CATÁLOGO
     case 4:
       showProducts();
@@ -129,11 +136,38 @@ while (rodando) {
         console.log("Número inválido");
         break;
       }
-      removeProduct(produtoEscolhido)
+      removeProduct(produtoEscolhido);
 
       break;
-    //VER CARRINHO
+    //BUSCAR PRODUTOS
     case 5:
+      showProducts();
+      input = prompt("Digite o nome do produto que deseja bucar: ");
+      if (!thereIsInput(input)) {
+        console.log("Entrada inválida");
+        break;
+      }
+
+      nomeBuscado = input;
+      produtoBuscado = searchProduct(nomeBuscado);
+
+      if (produtoBuscado.length === 0) {
+        console.log("Nenhum produto encontrado");
+        break;
+      }
+
+      produtoBuscado.forEach((p, i) => {
+        console.log(`${i + 1}. ${p.nome} R$${p.valor}`);
+      });
+
+      escolha = Number(prompt("\nDeseja continuar o programa? 1-Sim 2-Não "));
+      //Se escolha for diferente de 1 cancela o programa.
+      if (escolha != 1) {
+        rodando = false;
+      }
+      break;
+    //VER CARRINHO
+    case 6:
       checkout();
       escolha = Number(prompt("\nDeseja continuar o programa? 1-Sim 2-Não "));
       //Se escolha for diferente de 1 cancela o programa.
@@ -142,11 +176,8 @@ while (rodando) {
       }
       break;
 
-      editProduct(produtoEditado, nomeProduto, valorProduto);
-
-      break;
     // DELETAR PRODUTOS
-    case 6:
+    case 7:
       if (showCartProducts()) {
         input = prompt("Digite o número do produto que deseja deletar: ");
         if (!thereIsInput(input)) {
@@ -168,7 +199,7 @@ while (rodando) {
 
       break;
     // LIMPAR CARRINHO
-    case 7:
+    case 8:
       showCartProducts();
       input = prompt("\nDeseja mesmo Limpar o carrinho? 1-Sim 2-Não: ");
       if (!thereIsInput(input)) {
@@ -186,7 +217,7 @@ while (rodando) {
 
       break;
     // SAIR PROGRAMA
-    case 8:
+    case 9:
       rodando = false;
       console.log("\nFim do Programa");
       break;

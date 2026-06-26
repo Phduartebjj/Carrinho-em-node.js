@@ -159,12 +159,12 @@ function removeProduct(index) {
     console.log("Produto inválido");
     return;
   }
-  setProducts(
-    getProducts().filter((p) => p.id !== produtoSelecionado.id),
+  setProducts(getProducts().filter((p) => p.id !== produtoSelecionado.id));
+
+  const produtoCartSelecionado = getCartProducts().find(
+    (p) => p.id === produtoSelecionado.id,
   );
-  
-  const produtoCartSelecionado = getCartProducts().find((p) => p.id === produtoSelecionado.id)
-  if(produtoCartSelecionado){
+  if (produtoCartSelecionado) {
     setCartProducts(
       getCartProducts().filter((p) => p.id !== produtoCartSelecionado.id),
     );
@@ -173,6 +173,13 @@ function removeProduct(index) {
 
   console.log("Produto Removido");
   saveProductsInStorage();
+}
+
+function searchProduct(nomeP) {
+  //Compara o nomeP com o nome de cada produto, e vê se ele tem alguma parte escrita em algum produto. Se tiver retorna ele.
+  return getProducts().filter((p) =>
+    p.nome.toLowerCase().includes(nomeP.toLowerCase()),
+  );
 }
 
 export {
@@ -189,5 +196,6 @@ export {
   totalValueCartProducts,
   cleanCart,
   editProduct,
-  removeProduct
+  removeProduct,
+  searchProduct,
 };
