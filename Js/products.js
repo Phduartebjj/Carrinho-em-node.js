@@ -29,19 +29,27 @@ function addCartProducts(produtoComprado) {
   }
   //Produto é encontrado no array dos products através do índice
   const produto = getProducts()[produtoComprado - 1];
+  console.log("Estoque: ", produto.estoque)
   //Se o produto não for encontrado, vai retornar produto inválido
   if (!produto) {
     console.log("Produto inválido");
     return;
   }
+  if(produto.estoque === 0){
+    console.log("Produto sem estoque");
+    return
+  }
   //Procura se ele já existe no carrinho.
   const produtoEscolhido = getCartProducts().find((p) => p.id === produto.id);
-
+  
   //Se ele existir, adiciona mais um na quantidade
   if (produtoEscolhido) {
+    produto.estoque--
     produtoEscolhido.quantidade++;
+    console.log("Estoque: ", produto.estoque)
   } else {
     //Se não existir, eu crio um objeto baseado nele. Com a quantidade, para não acabar alterando o array products com o push, por que a referência vai ser a mesma.
+    produto.estoque--
     let produtoCarrinho = {
       nome: produto.nome,
       valor: produto.valor,
@@ -50,6 +58,7 @@ function addCartProducts(produtoComprado) {
     };
     getCartProducts().push(produtoCarrinho);
   }
+  saveProductsInStorage()
   saveCartInStorage();
 }
 //Cria um produto baseado no que o usuário escreveu.
@@ -58,6 +67,7 @@ function createProduct(nomeP, ValorP) {
     nome: nomeP,
     valor: Number(ValorP),
     id: randomUUID(),
+    estoque: 10
   };
 
   return product;
@@ -80,6 +90,7 @@ function removeCartProduct(index) {
   //Se a quantidade for maior do que 1 diminui quantidade
   if (produtoSelecionado.quantidade > 1) {
     produtoSelecionado.quantidade--;
+    
   } else {
     //Se for 1 ou abaixo, ele remove do array quando diminui
     setCartProducts(
@@ -120,7 +131,7 @@ function showCartProducts() {
 //Mostra os produtos do array products
 function showProducts() {
   getProducts().forEach((p, i) => {
-    console.log(`${i + 1}.Nome: ${p.nome}\n Valor: R$${p.valor}`);
+    console.log(`${i + 1}.Nome: ${p.nome}\n Valor: R$${p.valor}\n Estoque: ${p.estoque}`);
   });
 }
 //Limpa o carrinho
