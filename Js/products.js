@@ -82,6 +82,8 @@ function saveProduct(product) {
 function removeCartProduct(index) {
   //Acha o produto no carrinho pelo indíce
   const produtoSelecionado = getCartProducts()[index - 1];
+  const produtoCatalogo = getProducts().find((p) => p.id === produtoSelecionado.id)
+  console.log(produtoCatalogo)
   //Se o índice não for válido cancela a operação
   if (!produtoSelecionado) {
     console.log("Produto inválido");
@@ -89,10 +91,11 @@ function removeCartProduct(index) {
   }
   //Se a quantidade for maior do que 1 diminui quantidade
   if (produtoSelecionado.quantidade > 1) {
+    produtoCatalogo.estoque++
     produtoSelecionado.quantidade--;
-    
   } else {
     //Se for 1 ou abaixo, ele remove do array quando diminui
+    produtoCatalogo.estoque++
     setCartProducts(
       getCartProducts().filter((p) => p.id !== produtoSelecionado.id),
     );
@@ -137,11 +140,21 @@ function showProducts() {
 //Limpa o carrinho
 function cleanCart() {
   //Define o array como [], e salva no storage
+  getCartProducts().forEach((pC)=>{
+
+    getProducts().forEach((p)=>{
+      if(pC.id === p.id){
+        p.estoque += pC.quantidade 
+      }
+    })
+  })
+
   setCartProducts([]);
+  saveProductsInStorage()
   saveCartInStorage();
 }
 
-function editProduct(index, nomeP, valorP) {
+function editProduct(index, nomeP, valorP,estoqueP) {
   if (index > getProducts().length || index < 1) {
     console.log("Número inválido");
     return;
@@ -149,6 +162,7 @@ function editProduct(index, nomeP, valorP) {
   let produtoEditado = getProducts()[index - 1];
   produtoEditado.nome = nomeP;
   produtoEditado.valor = valorP;
+  produtoEditado.estoque = estoqueP;
   let produtoEditadoCart = getCartProducts().find(
     (p) => p.id === produtoEditado.id,
   );

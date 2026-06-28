@@ -29,6 +29,7 @@ let produtoEscolhido = 0;
 let produtoEditado = 0;
 let nomeBuscado;
 let produtoBuscado;
+let estoqueProduto
 
 while (rodando) {
   console.log("======== CATÁLOGO ========");
@@ -57,13 +58,13 @@ while (rodando) {
       console.log("=========================");
 
       produtoComprado = Number(
-        prompt("\nDigite o número do produto que Deseja comprar "),
+        prompt("\nDigite o número do produto que Deseja comprar: "),
       );
       //Verifica se o produtoEscolhi está dentro do que é permitdo
       if (produtoComprado >= 1 && produtoComprado <= getProducts().length) {
         addCartProducts(produtoComprado);
       } else {
-        console.log("Número do produto inválido");
+        console.log("\nNúmero do produto inválido");
       }
 
       escolha = Number(prompt("\nDeseja continuar? 1-Sim 2-Não "));
@@ -98,7 +99,7 @@ while (rodando) {
     case 3:
       showProducts();
       produtoEditado = Number(
-        prompt("Digite o número do produto que deseja editar"),
+        prompt("Digite o número do produto que deseja editar: "),
       );
       if (!numIsValid(produtoEditado)) {
         console.log("Número inválido");
@@ -113,13 +114,19 @@ while (rodando) {
       }
 
       valorProduto = Number(input);
-
       if (!numIsValid(valorProduto)) {
         console.log("Número inválido");
         break;
       }
 
-      editProduct(produtoEditado, nomeProduto, valorProduto);
+      input = prompt("Digite a quantidade do produto: ")
+      if (!thereIsInput(input)) {
+        console.log("Entrada inválida");
+        break;
+      }
+      estoqueProduto = Number(input)
+
+      editProduct(produtoEditado, nomeProduto, valorProduto, estoqueProduto);
 
       break;
     //REMOVER PRODUTO DO CATÁLOGO

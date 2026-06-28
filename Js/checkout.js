@@ -1,8 +1,9 @@
 import {
   totalValueCartProducts,
   showCartProducts,
-  cleanCart,
+  setCartProducts
 } from "./products.js";
+import { saveCartInStorage } from "./storage.js";
 import promptSync from "prompt-sync";
 
 const prompt = promptSync();
@@ -24,7 +25,13 @@ function checkout() {
     return;
   }
   console.log("Compra finalizada com sucesso!");
-  cleanCart();
+  cleanCartCheckout();
 }
+
+function cleanCartCheckout() {
+  setCartProducts([]);
+  saveCartInStorage();
+}
+
 
 export { checkout };
