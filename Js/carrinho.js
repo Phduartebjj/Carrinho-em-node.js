@@ -148,7 +148,6 @@ while (rodando) {
       break;
     //BUSCAR PRODUTOS
     case 5:
-      showProducts();
       input = prompt("Digite o nome do produto que deseja bucar: ");
       if (!thereIsInput(input)) {
         console.log("Entrada inválida");
